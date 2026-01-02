@@ -106,3 +106,77 @@ fun OnLoading(modifier: Modifier = Modifier) {
         contentDescription = stringResource(R.string.loading)
     )
 }
+
+@Composable
+fun OnError(retryAction: () -> Unit, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.loading_img),
+            contentDescription = ""
+        )
+        Text(text = stringResource(R.string.gagal), modifier = Modifier.padding(16.dp))
+        Button(onClick = retryAction) {
+            Text(stringResource(R.string.retry))
+        }
+    }
+}
+
+@Composable
+fun DaftarSiswa(
+    siswaList: List<Siswa>,
+    onItemClick: (Siswa) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(modifier = modifier) {
+        items(items = siswaList, key = { it.id }) { person ->
+            SiswaCard(
+                siswa = person,
+                modifier = Modifier
+                    .padding(dimensionResource(id = R.dimen.padding_small))
+                    .clickable { onItemClick(person) }
+            )
+        }
+    }
+}
+
+@Composable
+fun SiswaCard(
+    siswa: Siswa,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier,
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large)),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = siswa.nama,
+                    style = MaterialTheme.typography.titleLarge,
+                )
+                Spacer(Modifier.weight(1f))
+                Icon(
+                    imageVector = Icons.Default.Phone,
+                    contentDescription = null,
+                )
+            }
+            Text(
+                text = siswa.alamat,
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                text = siswa.telpon,
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
+    }
+}
