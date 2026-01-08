@@ -89,7 +89,13 @@ fun EntrySiswaBody(
             onValueChange = onSiswaValueChange,
             modifier = Modifier.fillMaxWidth()
         )
-
+        if (errorMessage != null) {
+            Text(
+                text = errorMessage,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_medium))
+            )
+        }
         Button(
             onClick = onSaveClick,
             enabled = uiStateSiswa.isEntryValid,
