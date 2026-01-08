@@ -1,14 +1,18 @@
 package com.example.firebase.view.controllNavigasi
-
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.firebase.view.DetailSiswaScreen
+import com.example.firebase.view.EditSiswaScreen
 import com.example.firebase.view.EntrySiswaScreen
 import com.example.firebase.view.HomeScreen
 import com.example.firebase.view.route.DestinasiDetail
+import com.example.firebase.view.route.DestinasiEdit
 import com.example.firebase.view.route.DestinasiEntry
 import com.example.firebase.view.route.DestinasiHome
 
@@ -21,19 +25,28 @@ Modifier = Modifier){
 fun HostNavigasi(
     navController: NavHostController,
     modifier: Modifier = Modifier
-){
-    NavHost(navController = navController, startDestination = DestinasiHome.route,
-        modifier = Modifier ){
+) {
+    NavHost(
+        navController = navController, startDestination = DestinasiHome.route,
+        modifier = Modifier
+    ) {
         composable(DestinasiHome.route) {
-            HomeScreen(navigateToItemEntry = { navController.navigate(
-                DestinasiEntry
-                    .route) },
+            HomeScreen(
+                navigateToItemEntry = {
+                    navController.navigate(
+                        DestinasiEntry
+                            .route
+                    )
+                },
                 navigateToItemUpdate = {
-                    navController.navigate("${DestinasiDetail.route}/${it}")})
+                    navController.navigate("${DestinasiDetail.route}/${it}")
+                })
         }
-        composable(DestinasiEntry.route){
-            EntrySiswaScreen(navigateBack = { navController.navigate(DestinasiHome.route)
+        composable(DestinasiEntry.route) {
+            EntrySiswaScreen(navigateBack = {
+                navController.navigate(DestinasiHome.route)
             })
+
         }
     }
 }

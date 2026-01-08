@@ -57,10 +57,13 @@ fun EntrySiswaScreen(
             onSiswaValueChange = viewModel::updateUiState,
             onSaveClick = {
                 coroutineScope.launch {
-                    viewModel.addSiswa()
-                    navigateBack()
+                    val success = viewModel.addSiswa()
+                    if (success) {
+                        navigateBack()
+                    }
                 }
             },
+            errorMessage = viewModel.errorMessage,
             modifier = Modifier
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
@@ -74,7 +77,8 @@ fun EntrySiswaBody(
     uiStateSiswa: UIStateSiswa,
     onSiswaValueChange: (DetailSiswa) -> Unit,
     onSaveClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    errorMessage: String? = null
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_large)),
@@ -85,6 +89,7 @@ fun EntrySiswaBody(
             onValueChange = onSiswaValueChange,
             modifier = Modifier.fillMaxWidth()
         )
+
         Button(
             onClick = onSaveClick,
             enabled = uiStateSiswa.isEntryValid,

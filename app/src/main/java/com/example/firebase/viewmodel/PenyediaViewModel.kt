@@ -1,10 +1,11 @@
 package com.example.firebase.viewmodel
-
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.firebase.repositori.AplikasiDataSiswa
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.createSavedStateHandle
+
 
 fun CreationExtras.aplikasiDataSiswa(): AplikasiDataSiswa = (
         this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as AplikasiDataSiswa
@@ -14,5 +15,7 @@ object PenyediaViewModel {
     val Factory = viewModelFactory {
         initializer { HomeViewModel(aplikasiDataSiswa().container.repositorySiswa) }
         initializer { EntryViewModel(aplikasiDataSiswa().container.repositorySiswa) }
+        initializer { DetailViewModel(this.createSavedStateHandle(),aplikasiDataSiswa().container.repositorySiswa) }
+        initializer { EditViewModel(this.createSavedStateHandle(),aplikasiDataSiswa().container.repositorySiswa) }
     }
 }

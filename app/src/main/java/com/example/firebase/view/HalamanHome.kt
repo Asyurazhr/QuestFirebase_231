@@ -1,5 +1,4 @@
 package com.example.firebase.view
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +11,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -23,6 +25,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -34,9 +37,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.firebase.R
 import com.example.firebase.modeldata.Siswa
 import com.example.firebase.view.route.DestinasiHome
+import com.example.firebase.viewmodel.HomeViewModel
+import com.example.firebase.viewmodel.PenyediaViewModel
 import com.example.firebase.viewmodel.StatusUiSiswa
 
-private val HomeViewModel.statusUiSiswa: StatusUiSiswa
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,7 +50,12 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = PenyediaViewModel.Factory)
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.loadSiswa()
+    }
+
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -71,27 +80,26 @@ fun HomeScreen(
     ) { innerPadding ->
         HomeBody(
             siswaUiState = viewModel.statusUiSiswa,
-            onItemClick = navigateToItemUpdate,
+            onSiswaClick = navigateToItemUpdate,
             retryAction = viewModel::loadSiswa,
-            modifier = modifier
+            modifier = Modifier // Gunakan Modifier baru agar padding bersih
                 .padding(innerPadding)
                 .fillMaxSize()
         )
     }
 }
-
 @Composable
 fun HomeBody(
     siswaUiState: StatusUiSiswa,
     retryAction: () -> Unit,
-    onItemClick: (Int) -> Unit,
+    onSiswaClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     when (siswaUiState) {
         is StatusUiSiswa.Loading -> OnLoading(modifier = modifier)
         is StatusUiSiswa.Success -> DaftarSiswa(
             siswaList = siswaUiState.siswa,
-            onItemClick = {onItemClick(it.id.toInt())},
+            onSiswaClick = {onSiswaClick(it.id.toInt())},
             modifier = modifier.fillMaxWidth()
         )
         is StatusUiSiswa.Error -> OnError(retryAction = retryAction, modifier = modifier)
@@ -128,7 +136,7 @@ fun OnError(retryAction: () -> Unit, modifier: Modifier = Modifier) {
 @Composable
 fun DaftarSiswa(
     siswaList: List<Siswa>,
-    onItemClick: (Siswa) -> Unit,
+    onSiswaClick: (Siswa) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
@@ -137,7 +145,7 @@ fun DaftarSiswa(
                 siswa = person,
                 modifier = Modifier
                     .padding(dimensionResource(id = R.dimen.padding_small))
-                    .clickable { onItemClick(person) }
+                    .clickable { onSiswaClick(person) }
             )
         }
     }
